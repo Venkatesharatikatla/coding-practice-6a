@@ -175,3 +175,21 @@ app.get("/states/:stateId/stats/", async (request, response) => {
     totalDeaths: stats["SUM(deaths)"],
   });
 });
+
+//Get districtDetails API
+app.get("/districts/:districtId/details/", async (request, response) => {
+  const { districtId } = request.params;
+  const getStateNameQuery = `
+    SELECT
+      state_name
+    FROM
+      district
+    NATURAL JOIN
+      state
+    WHERE 
+      district_id=${districtId};`;
+  const state = await database.get(getStateNameQuery);
+  response.send({ stateName: state.state_name });
+});
+
+module.exports = app;
